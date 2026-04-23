@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rose</title>
+
+  <!-- pixel/game-style font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: pink;
+      color: red;
+      font-family: 'Press Start 2P', monospace;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .text {
+      line-height: 1.8;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="text" onclick="nextText()">
+    <p id="line1"></p>
+    <p id="line2"></p>
+    <p id="line3"></p>
+    <p id="line4"></p>
+  </div>
+
+  <script>
+
+  let step = 1;
+
+  function typeText(element, text, speed) {
+    let i = 0;
+    let interval = setInterval(() => {
+      element.innerHTML += text.charAt(i);
+      i++;
+      if (i >= text.length) clearInterval(interval);
+    }, speed);
+  }
+
+  function nextText() {
+    if (step === 1) {
+      typeText(document.getElementById("line2"), "or maybe it found you", 50);
+    }
+    else if (step === 2) {
+      typeText(document.getElementById("line3"), "click again", 50);
+    }
+    else if (step === 3) {
+      typeText(document.getElementById("line4"), "it keeps going", 50);
+    }
+    step++;
+  }
+
+  // 👇 THIS makes the first line appear automatically
+  window.onload = function() {
+    typeText(document.getElementById("line1"), "you found it", 50);
+  };
+</script>
+
+
+</body>
+</html>
