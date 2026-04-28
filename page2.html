@@ -1,33 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Page 2</title>
+<title>Page 2</title>
+
+<style>
+
+body{
+background:black;
+margin:0;
+height:100vh;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:flex-start;
+}
+
+.rose-box{
+width:200px;
+height:200px;
+margin-left:40px;
+overflow:hidden;
+cursor:pointer;
+transition:
+transform 2.2s ease,
+margin-left 2.2s ease;
+}
+
+.rose-box:hover{
+transform:scale(1.08);
+}
+
+.rose-box.enter{
+margin-left:calc(50vw - 100px);
+transform:scale(1.9);
+}
+
+video{
+width:120%;
+height:112%;
+object-fit:cover;
+transform:translate(18px,-16px);
+display:block;
+}
+
+.fade{
+position:fixed;
+inset:0;
+background:black;
+opacity:0;
+pointer-events:none;
+transition:opacity 1.8s ease;
+}
+
+.fade.show{
+opacity:1;
+}
+
+</style>
 </head>
 
-<body style="background:black; margin:0; height:100vh; display:flex; align-items:center; justify-content:flex-start;">
+<body>
 
-  <div onclick="goToRose()" style="
-    width:200px;
-    height:200px;
-    background:white;
-    color:black;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-left:40px;
-    font-family: Arial;
-    font-size:24px;
-    cursor:pointer;
-  ">
-    ROSE
-  </div>
+<div
+id="roseBox"
+class="rose-box"
+onclick="beginTransition()"
+>
+<video autoplay loop muted playsinline>
+<source src="videos/ROSE.MP4" type="video/mp4">
+</video>
+</div>
 
-  <script>
-    function goToRose() {
-      window.location.href = "rose.html";
-    }
-  </script>
+<div id="fade" class="fade"></div>
 
-</body>
+<script>
+
+function beginTransition(){
+
+document
+.getElementById("roseBox")
+.classList.add("enter");
+
+setTimeout(function(){
+
+document
+.getElementById("fade")
+.classList.add("show");
+
+},1500);
+
+setTimeout(function(){
+
+window.location.href="rose.html";
+
+},3200);
+
+}
+
+</script>
+
 </body>
 </html>
