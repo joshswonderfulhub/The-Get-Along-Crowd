@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -43,12 +42,17 @@ max-width:950px;
 height:72vh;
 border:1px solid white;
 padding:55px;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+.log-box::-webkit-scrollbar{
+display:none;
 }
 
 .title{
 font-size:38px;
 margin-bottom:40px;
-letter-spacing:1px;
 }
 
 .rose{
@@ -66,9 +70,7 @@ animation:blink 1s step-end infinite;
 }
 
 @keyframes blink{
-50%{
-opacity:0;
-}
+50%{opacity:0;}
 }
 
 .trigger{
@@ -76,17 +78,28 @@ color:pink;
 cursor:pointer;
 }
 
-.trigger:hover{
-opacity:.7;
+.blue{
+color:darkblue;
+cursor:pointer;
 }
 
+.trigger:hover,
+.blue:hover,
+.decision:hover{
+opacity:.75;
+}
+
+.decision{
+display:block;
+margin-top:30px;
+color:pink;
+cursor:pointer;
+}
 </style>
 </head>
 <body>
 
-
 <div id="logScreen">
-
 <div class="log-box">
 
 <div class="title">
@@ -96,31 +109,68 @@ opacity:.7;
 <div id="text"></div>
 
 </div>
-
 </div>
 
 <script>
 
 const segments=[
 
-`Hey, my name's `,
+`Hey! My name’s `,
 `[[Belle.]]`,
 
-` No lol it's actually not.
-It's `,
-`[[Rose.]]`,
+` JOKE! `,
+`[[It’s Rose.]]`,
+
+` But I guess you already knew `,
+`[[that.]]`,
+
+` Whoever you `,
+`[[are…]]`,
+
+` I’m living in Randwood at the moment, as I always have.
+
+With my `,
+`[[Mum.]]`,
+
+` She didn’t used to be but she really is the WORST `,
+`[[now.]]`,
 
 ` `,
-`[[Rose]].`,
+`[[Lol.]]`,
 
-` I feel like a loser all the time.
-Maybe I AM or something.
-This Treslopine is pretty cool I have to `,
-`[[say.]]`,
+`
+I don’t know what happened!
 
-` I feel... good.`
+I graduated high school last year — Randwood College ofc — and things have been weeeiiiiirrrrrddddd ever `,
+`[[since…]]`,
+
+`
+I started urban planning at Melbourne Uni and I met some awesome girls in my classes and things were exciting and I was super okay but then I really `,
+`[[wasn’t…]]`,
+
+` `,
+`[[all of a sudden!]]`,
+
+`
+All of a sudden I started getting all existential and depressed; I’d seriously never had that happen `,
+`[[before.]]`,
+
+`
+I remember being in class and it was the sunniest day ever — like so sunny, sunlight was permeating the room and the mullions were casting beautiful shadows at a sharp angle on the misshapen tables and I could see all that, I could, but it all had this weird tinge of `,
+
+`[[dark blue!]]`,
+
+`
+Dark blue everywhere.
+
+Navy something.
+
+Everything and everyone was friggin `,
+
+`[[DARK BLUE! …]]`
 
 ];
+
 
 const box=document.getElementById("text");
 
@@ -128,21 +178,15 @@ let segment=0;
 let i=0;
 
 
-/* fade in first */
 setTimeout(function(){
-
 document
 .getElementById("logScreen")
 .classList.add("show");
-
 },500);
 
 
-/* wait, then begin typing */
 setTimeout(function(){
-
 typeSegment();
-
 },3800);
 
 
@@ -150,25 +194,41 @@ typeSegment();
 function typeSegment(){
 
 if(segment>=segments.length){
+showDecisions();
 return;
 }
 
 let current=segments[segment];
 
+
 if(current.includes("[[")){
 
-let word=
-current
+let word=current
 .replace("[[","")
 .replace("]]","");
 
-box.innerHTML +=
-'<span class="trigger" onclick="continueTyping()">'+
+
+let className="trigger";
+
+if(
+word==="dark blue!" ||
+word==="DARK BLUE! …"
+){
+className="blue";
+}
+
+
+box.innerHTML+=
+'<span class="'+className+'" onclick="continueTyping()">'+
 word+
 '</span>';
 
+box.scrollTop=box.scrollHeight;
+
 return;
 }
+
+
 
 function typeLetter(){
 
@@ -190,8 +250,12 @@ box.innerHTML.replace(
 ''
 );
 
-let speed=
-34+Math.random()*22;
+
+/* auto scroll while typing */
+box.scrollTop=box.scrollHeight;
+
+
+let speed=34+Math.random()*22;
 
 if(current[i]==="."){
 speed=180;
@@ -215,18 +279,55 @@ typeLetter();
 }
 
 
+
 function continueTyping(){
 
-let triggers=
-document.querySelectorAll(".trigger");
-
-triggers.forEach(t=>{
+document
+.querySelectorAll(".trigger,.blue")
+.forEach(t=>{
 t.onclick=null;
 });
 
 segment++;
 
 typeSegment();
+
+}
+
+
+
+function showDecisions(){
+
+box.innerHTML+=`
+
+<br><br>
+
+<span class="decision"
+onclick="chooseDecision('travel')">
+Rose should travel!
+</span>
+
+<span class="decision"
+onclick="chooseDecision('healthy')">
+Rose should start healthier habits!
+</span>
+
+`;
+
+box.scrollTop=box.scrollHeight;
+
+}
+
+
+
+function chooseDecision(choice){
+
+localStorage.setItem(
+'roseDecision',
+choice
+);
+
+window.location.href='page2.html';
 
 }
 
