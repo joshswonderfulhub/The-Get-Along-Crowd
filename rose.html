@@ -85,8 +85,8 @@ cursor:pointer;
 
 <script>
 
-/* ✏️ EDIT THIS ONLY */
-const rawText = `[[Hey!]] My name’s [[Belle.]] JOKE! [[It’s Rose.]] But I guess you already knew [[that.]] Whoever you [[are…]] I’m living in Randwood at the moment, as I always have. With my [[Mum.]] She didn’t used to be but she really is the WORST [[now.]] [[Lol.]] I don’t know what happened! I graduated high school last year - Randwood College ofc - and things have been weeeiiiiirrrrrddddd ever [[since…]] I started urban planning at Melbourne Uni and I met some awesome girls in my classes and things were exciting and I was super okay but then I really [[wasn’t…]] [[all of a sudden!]] All of a sudden I started getting all existential and depressed; I’d seriously never had that happen [[before.]] I remember being in class and it was the sunniest day ever - like so sunny, sunlight was permeating the room and the mullions were casting beautiful shadows at a sharp angle on those weird misshapen uni tables and I could see all that, I could, but it all had this weird tinge of [[mossy green!]] Gross green everywhere. Vommy weird green. Everything and everyone was friggin [[GREEN! …]]`;
+/* ✏️ UPDATED TEXT */
+const rawText = `Hey! My name’s [[Belle.]] JOKE! [[It’s Rose.]] But I guess you already knew [[that.]] Whoever you [[are…]] I’m living in Randwood at the moment, as I always [[have.]] I’m feeling awesome and Uni is great right [[now!]] Life is [[sick!]] Anyways, should I go to the CINEMA tonight with Bonnie who I sort of like but don’t or should I go to the PONTY with Richard and [[Lily?]]`;
 
 const box=document.getElementById("text");
 const scrollBox=document.getElementById("scrollBox");
@@ -151,13 +151,7 @@ if(part.startsWith("[[")){
 let word = part.replace("[[","").replace("]]","");
 
 let span=document.createElement("span");
-
-if(word==="mossy green!" || word==="GREEN! …"){
-span.className="green";
-}else{
 span.className="trigger";
-}
-
 span.textContent=word;
 
 span.onclick=()=>{
@@ -207,12 +201,16 @@ box.innerHTML+=`
 
 <br><br>
 
-<span class="decision" onclick="choose('travel')">
-Rose should travel to Europe!
+<span class="decision" onclick="choose()">
+Ponty
 </span>
 
-<span class="decision" onclick="choose('healthy')">
-Rose should start healthier habits!
+<span class="decision" onclick="choose()">
+Bonnie
+</span>
+
+<span class="decision" onclick="choose()">
+Rose should leave Melbourne
 </span>
 
 `;
@@ -220,8 +218,7 @@ Rose should start healthier habits!
 scrollDown();
 }
 
-function choose(choice){
-localStorage.setItem('roseDecision',choice);
+function choose(){
 window.location.href='page3.html';
 }
 
@@ -239,6 +236,4 @@ type();
 </script>
 
 </body>
-
-
 </html>
