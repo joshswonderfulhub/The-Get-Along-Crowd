@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Page 3</title>
+
+<style>
+
+body{
+background:black;
+margin:0;
+height:100vh;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:flex-start;
+}
+
+/* shared box style */
+.box{
+width:200px;
+height:200px;
+margin-left:40px;
+overflow:hidden;
+cursor:pointer;
+
+transition:
+transform 2.2s ease,
+margin-left 2.2s ease;
+}
+
+.box:hover{
+transform:scale(1.08);
+}
+
+.box.enter{
+margin-left:calc(50vw - 100px);
+transform:scale(1.9);
+}
+
+/* fade */
+.fade{
+position:fixed;
+inset:0;
+background:black;
+opacity:0;
+pointer-events:none;
+transition:opacity 1.8s ease;
+}
+
+.fade.show{
+opacity:1;
+}
+
+/* placeholder visuals */
+.graham{
+background:#2e2e2e;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-family:monospace;
+font-size:20px;
+}
+
+.tan{
+background:#5c4033;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-family:monospace;
+font-size:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- GRAHAM -->
+<div id="grahamBox" class="box graham" onclick="chooseCharacter('graham')">
+GRAHAM
+</div>
+
+<!-- TAN -->
+<div id="tanBox" class="box tan" onclick="chooseCharacter('tan')">
+TAN
+</div>
+
+<div id="fade" class="fade"></div>
+
+<script>
+
+/* 🧠 retrieve Rose decision */
+const roseDecision = localStorage.getItem('roseDecision');
+console.log("Rose decision:", roseDecision);
+
+/* prevent double click */
+let clicked=false;
+
+function chooseCharacter(name){
+
+if(clicked) return;
+clicked=true;
+
+/* pick correct box */
+let box =
+name === "graham"
+? document.getElementById("grahamBox")
+: document.getElementById("tanBox");
+
+/* animate */
+box.classList.add("enter");
+
+/* fade */
+setTimeout(()=>{
+document.getElementById("fade").classList.add("show");
+},1500);
+
+/* go to next page (you'll build later) */
+setTimeout(()=>{
+
+if(name==="graham"){
+window.location.href="graham.html";
+}else{
+window.location.href="tan.html";
+}
+
+},3200);
+
+}
+
+</script>
+
+</body>
+</html>

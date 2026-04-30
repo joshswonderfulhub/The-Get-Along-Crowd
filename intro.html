@@ -80,6 +80,11 @@ transition:opacity 1.8s ease;
 <div id="text"></div>
 </div>
 
+<!-- 🎵 BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="audio/intro-anthem-main.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 
 const segments=[
@@ -112,7 +117,7 @@ Okay so we need YOU to help some `,
 
 Some troubled individuals living in the great Melbourne suburb of `,
 
-`[[Randwood]]`,
+`[[Randwood.]]`,
 
 `
 
@@ -175,12 +180,15 @@ Go on. `,
 
 ];
 
-
 const box=document.getElementById("text");
+
+/* 🎵 music setup */
+const music = document.getElementById("bgMusic");
+music.volume = 0.6;
+let musicStarted = false;
 
 let segment=0;
 let i=0;
-
 
 function typeSegment(){
 
@@ -189,7 +197,6 @@ return;
 }
 
 let current=segments[segment];
-
 
 /* clickable trigger words */
 if(current.includes("[[")){
@@ -209,17 +216,13 @@ box.scrollTop=box.scrollHeight;
 return;
 }
 
-
-
 function typeLetter(){
 
 if(i>=current.length){
-
 i=0;
 segment++;
 typeSegment();
 return;
-
 }
 
 box.innerHTML=
@@ -235,9 +238,7 @@ box.innerHTML.replace(
 
 box.scrollTop=box.scrollHeight;
 
-
-let speed=
-34+Math.random()*22;
+let speed=34+Math.random()*22;
 
 if(current[i]==="."){
 speed=180;
@@ -249,10 +250,7 @@ speed=120;
 
 i++;
 
-setTimeout(
-typeLetter,
-speed
-);
+setTimeout(typeLetter,speed);
 
 }
 
@@ -260,9 +258,13 @@ typeLetter();
 
 }
 
-
-
 function continueTyping(){
+
+/* 🔊 start music on first user interaction */
+if(!musicStarted){
+music.play();
+musicStarted = true;
+}
 
 document
 .querySelectorAll(".trigger")
@@ -274,14 +276,24 @@ segment++;
 
 if(segment>=segments.length){
 
-document.body.classList.add(
-"fade-out"
-);
+/* 🎵 fade out music */
+let fadeAudio = setInterval(function(){
+
+if(music.volume > 0.02){
+music.volume -= 0.02;
+}else{
+music.volume = 0;
+clearInterval(fadeAudio);
+music.pause();
+}
+
+},60);
+
+/* fade screen */
+document.body.classList.add("fade-out");
 
 setTimeout(function(){
-
 window.location.href="page2.html";
-
 },1800);
 
 return;
@@ -292,11 +304,10 @@ typeSegment();
 
 }
 
-
-setTimeout(
-typeSegment,
-800
-);
+/* start typing ONLY (no autoplay audio) */
+setTimeout(function(){
+typeSegment();
+},800);
 
 </script>
 

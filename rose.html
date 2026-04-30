@@ -7,33 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
 background:black;
 color:white;
 height:100vh;
-overflow:hidden;
-font-family:'VT323', monospace;
-}
-
-#logScreen{
-opacity:0;
-pointer-events:none;
-transition:opacity 2.5s ease;
-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
+font-family:'VT323', monospace;
+
+opacity:0;
+transition:opacity 2s ease;
 }
 
-#logScreen.show{
+body.show{
 opacity:1;
-pointer-events:auto;
 }
 
 .log-box{
@@ -46,18 +36,14 @@ overflow-y:auto;
 scrollbar-width:none;
 }
 
-.log-box::-webkit-scrollbar{
-display:none;
-}
+.log-box::-webkit-scrollbar{display:none;}
 
 .title{
 font-size:38px;
 margin-bottom:40px;
 }
 
-.rose{
-color:pink;
-}
+.rose{color:pink;}
 
 #text{
 font-size:34px;
@@ -68,26 +54,14 @@ white-space:pre-wrap;
 .cursor{
 animation:blink 1s step-end infinite;
 }
+@keyframes blink{50%{opacity:0;}}
 
-@keyframes blink{
-50%{opacity:0;}
-}
-
-.trigger{
-color:pink;
-cursor:pointer;
-}
-
-.blue{
-color:darkblue;
-cursor:pointer;
-}
+.trigger{color:pink;cursor:pointer;}
+.green{color:#39FF14;cursor:pointer;}
 
 .trigger:hover,
-.blue:hover,
-.decision:hover{
-opacity:.75;
-}
+.green:hover,
+.decision:hover{opacity:.7;}
 
 .decision{
 display:block;
@@ -99,239 +73,172 @@ cursor:pointer;
 </head>
 <body>
 
-<div id="logScreen">
-<div class="log-box">
+<div class="log-box" id="scrollBox">
 
 <div class="title">
-<span class="rose">Rose's</span> log — 23/07/29
+<span class="rose">Rose's log</span>
 </div>
 
 <div id="text"></div>
 
 </div>
-</div>
 
 <script>
 
-const segments=[
-
-`Hey! My name’s `,
-`[[Belle.]]`,
-
-` JOKE! `,
-`[[It’s Rose.]]`,
-
-` But I guess you already knew `,
-`[[that.]]`,
-
-` Whoever you `,
-`[[are…]]`,
-
-` I’m living in Randwood at the moment, as I always have.
-
-With my `,
-`[[Mum.]]`,
-
-` She didn’t used to be but she really is the WORST `,
-`[[now.]]`,
-
-` `,
-`[[Lol.]]`,
-
-`
-I don’t know what happened!
-
-I graduated high school last year — Randwood College ofc — and things have been weeeiiiiirrrrrddddd ever `,
-`[[since…]]`,
-
-`
-I started urban planning at Melbourne Uni and I met some awesome girls in my classes and things were exciting and I was super okay but then I really `,
-`[[wasn’t…]]`,
-
-` `,
-`[[all of a sudden!]]`,
-
-`
-All of a sudden I started getting all existential and depressed; I’d seriously never had that happen `,
-`[[before.]]`,
-
-`
-I remember being in class and it was the sunniest day ever — like so sunny, sunlight was permeating the room and the mullions were casting beautiful shadows at a sharp angle on the misshapen tables and I could see all that, I could, but it all had this weird tinge of `,
-
-`[[dark blue!]]`,
-
-`
-Dark blue everywhere.
-
-Navy something.
-
-Everything and everyone was friggin `,
-
-`[[DARK BLUE! …]]`
-
-];
-
+/* ✏️ EDIT THIS ONLY */
+const rawText = `[[Hey!]] My name’s [[Belle.]] JOKE! [[It’s Rose.]] But I guess you already knew [[that.]] Whoever you [[are…]] I’m living in Randwood at the moment, as I always have. With my [[Mum.]] She didn’t used to be but she really is the WORST [[now.]] [[Lol.]] I don’t know what happened! I graduated high school last year - Randwood College ofc - and things have been weeeiiiiirrrrrddddd ever [[since…]] I started urban planning at Melbourne Uni and I met some awesome girls in my classes and things were exciting and I was super okay but then I really [[wasn’t…]] [[all of a sudden!]] All of a sudden I started getting all existential and depressed; I’d seriously never had that happen [[before.]] I remember being in class and it was the sunniest day ever - like so sunny, sunlight was permeating the room and the mullions were casting beautiful shadows at a sharp angle on those weird misshapen uni tables and I could see all that, I could, but it all had this weird tinge of [[mossy green!]] Gross green everywhere. Vommy weird green. Everything and everyone was friggin [[GREEN! …]]`;
 
 const box=document.getElementById("text");
+const scrollBox=document.getElementById("scrollBox");
 
-let segment=0;
-let i=0;
+/* AUDIO */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let buffer=null;
 
+fetch("audio/rose-text-sound.mp3")
+.then(r=>r.arrayBuffer())
+.then(d=>audioCtx.decodeAudioData(d))
+.then(b=>buffer=b);
 
-setTimeout(function(){
-document
-.getElementById("logScreen")
-.classList.add("show");
-},500);
+const panNode = audioCtx.createStereoPanner();
+panNode.pan.value = 0.2;
 
+const gainNode = audioCtx.createGain();
+gainNode.gain.value = 0.5;
 
-setTimeout(function(){
-typeSegment();
-},3800);
+panNode.connect(gainNode);
+gainNode.connect(audioCtx.destination);
 
+let lastSoundTime=0;
 
+function playSound(){
+if(!buffer) return;
 
-function typeSegment(){
+let now=performance.now();
+if(now-lastSoundTime<40) return;
+lastSoundTime=now;
 
-if(segment>=segments.length){
+let src=audioCtx.createBufferSource();
+src.buffer=buffer;
+src.playbackRate.value=0.95+Math.random()*0.1;
+
+src.connect(panNode);
+src.start(0);
+}
+
+/* parsing */
+const parts = rawText.split(/(\[\[.*?\]\])/g);
+
+let partIndex=0;
+let charIndex=0;
+
+function scrollDown(){
+scrollBox.scrollTop=scrollBox.scrollHeight;
+}
+
+function type(){
+
+if(partIndex >= parts.length){
 showDecisions();
 return;
 }
 
-let current=segments[segment];
+let part = parts[partIndex];
 
+/* TRIGGER */
+if(part.startsWith("[[")){
 
-if(current.includes("[[")){
+let word = part.replace("[[","").replace("]]","");
 
-let word=current
-.replace("[[","")
-.replace("]]","");
+let span=document.createElement("span");
 
-
-let className="trigger";
-
-if(
-word==="dark blue!" ||
-word==="DARK BLUE! …"
-){
-className="blue";
+if(word==="mossy green!" || word==="GREEN! …"){
+span.className="green";
+}else{
+span.className="trigger";
 }
 
+span.textContent=word;
 
-box.innerHTML+=
-'<span class="'+className+'" onclick="continueTyping()">'+
-word+
-'</span>';
+span.onclick=()=>{
+span.onclick=null;
+partIndex++;
+charIndex=0;
+type();
+};
 
-box.scrollTop=box.scrollHeight;
-
+box.appendChild(span);
+scrollDown();
 return;
 }
 
+/* TEXT */
+if(charIndex < part.length){
 
+box.innerHTML += part.charAt(charIndex) + '<span class="cursor">|</span>';
 
-function typeLetter(){
+box.innerHTML =
+box.innerHTML.replace(/<span class="cursor">\|<\/span>(?!.*cursor)/g,'');
 
-if(i>=current.length){
-i=0;
-segment++;
-typeSegment();
+if(part[charIndex] !== " ") playSound();
+
+scrollDown();
+
+charIndex++;
+
+let speed=26+Math.random()*18;
+if(part[charIndex]===".") speed=150;
+if(part[charIndex]===",") speed=100;
+
+setTimeout(type,speed);
 return;
 }
 
-box.innerHTML=
-box.innerHTML+
-current.charAt(i)+
-'<span class="cursor">|</span>';
-
-box.innerHTML=
-box.innerHTML.replace(
-/<span class="cursor">\|<\/span>(?!.*cursor)/g,
-''
-);
-
-
-/* auto scroll while typing */
-box.scrollTop=box.scrollHeight;
-
-
-let speed=34+Math.random()*22;
-
-if(current[i]==="."){
-speed=180;
+/* NEXT */
+partIndex++;
+charIndex=0;
+type();
 }
 
-if(current[i]===","){
-speed=120;
-}
-
-i++;
-
-setTimeout(
-typeLetter,
-speed
-);
-
-}
-
-typeLetter();
-
-}
-
-
-
-function continueTyping(){
-
-document
-.querySelectorAll(".trigger,.blue")
-.forEach(t=>{
-t.onclick=null;
-});
-
-segment++;
-
-typeSegment();
-
-}
-
-
-
+/* DECISIONS */
 function showDecisions(){
 
 box.innerHTML+=`
 
 <br><br>
 
-<span class="decision"
-onclick="chooseDecision('travel')">
-Rose should travel!
+<span class="decision" onclick="choose('travel')">
+Rose should travel to Europe!
 </span>
 
-<span class="decision"
-onclick="chooseDecision('healthy')">
+<span class="decision" onclick="choose('healthy')">
 Rose should start healthier habits!
 </span>
 
 `;
 
-box.scrollTop=box.scrollHeight;
-
+scrollDown();
 }
 
-
-
-function chooseDecision(choice){
-
-localStorage.setItem(
-'roseDecision',
-choice
-);
-
-window.location.href='page2.html';
-
+function choose(choice){
+localStorage.setItem('roseDecision',choice);
+window.location.href='page3.html';
 }
+
+/* fade in first */
+setTimeout(()=>{
+document.body.classList.add("show");
+},50);
+
+/* start typing AFTER fade */
+setTimeout(()=>{
+audioCtx.resume();
+type();
+},2000);
 
 </script>
 
 </body>
+
+
 </html>
