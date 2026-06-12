@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>BENCH</title>
+<title>PIGEON</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -81,13 +81,15 @@ transition:opacity 1.5s ease;
 <audio id="typing2" src="audio/tom-and-jack-sound.mp3"></audio>
 <audio id="typing3" src="audio/tom-and-jack-sound.mp3"></audio>
 
-<audio id="spray" src="audio/spray-paint.mp3"></audio>
+<audio id="magpie" src="audio/magpie.mp3"></audio>
+<audio id="pigeon" src="audio/pigeon.mp3"></audio>
 
 <script>
 
 const box = document.getElementById("text");
 const music = document.getElementById("music");
-const spray = document.getElementById("spray");
+const magpie = document.getElementById("magpie");
+const pigeon = document.getElementById("pigeon");
 
 const voices = [
 document.getElementById("typing1"),
@@ -134,55 +136,103 @@ voiceIndex = 0;
 
 }
 
-function playSpray(){
-spray.currentTime = 0;
-spray.volume = 0.7;
-spray.play();
+function playSpecialSound(soundName){
+
+let s = null;
+
+if(soundName === "magpie"){
+s = magpie;
+}
+
+if(soundName === "pigeon"){
+s = pigeon;
+}
+
+if(s){
+s.currentTime = 0;
+s.volume = 0.5;
+s.play();
+}
+
 }
 
 const segments = [
 
-`We went over to one of the fully white, poo-stained benches that Tom had been `,
+`\tSometimes, Tom runs out of surface so he just starts painting the `,
 
-`[saving.]`,
+`[birds.]`,
 
-` The birds in Randwood are different, they poo at extraordinary rates. Everywhere you look is white mess from pigeons and magpies, on the footpaths and the stainless-steel bollards and especially on the `,
+` Not with spray paint, of course, just with this red food dye he got, he’s not a `,
 
-`[benches.]`,
+`[monster.]`,
 
-` Tom had been saving this one, having not touched it for a week until this moment, letting the birds create a fresh canvas for `,
+` And it’s actually not even him who tags `,
 
-`[him.]`,
+`[them.]`,
 
-` Neither the poo nor Tom’s beautiful art is ever cleaned `,
+`\n\tWe walked over to where the birds mostly congregate, around `,
 
-`[up.]`,
+`[Jimmy.|magpie]`,
 
-`\n\tTom and I marveled at the fresh newness of the bench and then Tom goes at `,
+` Jimmy is a bum we’re friends with who has the trust of all the birds around `,
 
-`[it,|spray]`,
+`[Randwood Central.]`,
 
-` writing the letters of our `,
+` We caught him then dancing elegantly—in his crusty green jacket and brown pants—amidst the pigeons and the noisy miners, and the magpies, gingerly leaping and landing in every space between them while they waddled `,
 
-`[organisation]`,
+`[around]`,
 
-`—an organisation Tom and I came up with and in which we are the only members—`,
+` `,
 
-`[SPG]`,
+`[unphased.]`,
 
-`, or ‘Squirting P*ssy `,
+` All the birds are extremely skittish but not around `,
 
-`[Gang’]`,
+`[Jimmy.]`,
 
-`. Tom sprayed away and I filmed it for our Instagram which has around, okay exactly, 48 `,
+`\n\t‘Oi, Jim.’\n\tJim looked up and `,
 
-`[followers.]`,
+`[smiled.]`,
 
-`\n\t‘Yeahhhhhhh, fresh stain, sucka!’ Tommy said.`,
+`\n\t‘Hey boys.’\n\t‘We need you to paint a couple `,
 
-`\n\t‘Beautiful work, matey’ `,
+`[birds.’]`,
 
-`[I said.]`
+`\n\tTom chucked over his food dye and Jimmy caught it deftly, still dancing. He grabbed one of the pigeons waddling around and started to neatly carve in the letters, `,
+
+`[‘SPG’.|pigeon]`,
+
+`\n\t‘Thanks, Jim, you’re a real `,
+
+`[one.’]`,
+
+`\n\t‘Heh, a real one. I guess I am. Aren’t we `,
+
+`[all?’]`,
+
+`\n\t‘Hell yeah, Jim, hell `,
+
+`[yeah.’]`,
+
+`\n\t‘A real rat.’\n\t`,
+
+`[‘Sorry?’]`,
+
+`\n\t‘They’ve got a real rat, over there’—Jim pointed to the Mayor’s skyscraper—’a real rat they say, said they’re gonna squash `,
+
+`[it.’]`,
+
+`\n\t‘What are you on about?’ I `,
+
+`[asked.]`,
+
+`\n\t‘The `,
+
+`[rat.’]`,
+
+`\n\t‘Whatever, Jim, just finish the `,
+
+`[art.’]`
 
 ];
 
@@ -200,7 +250,7 @@ if(segment >= segments.length){
 document.body.classList.add("fade-out");
 
 setTimeout(function(){
-window.location.href = "tag-menu-after-bench.html";
+window.location.href = "tag-menu-after-bench-pigeon.html";
 },1500);
 
 return;
@@ -291,8 +341,8 @@ function continueTyping(event){
 
 let clicked = event.target;
 
-if(clicked.dataset.sound === "spray"){
-playSpray();
+if(clicked.dataset.sound){
+playSpecialSound(clicked.dataset.sound);
 }
 
 clicked.onclick = null;
