@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Choose</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+.choice{
+font-size:2.8rem;
+cursor:pointer;
+transition:.2s ease;
+color:yellow;
+user-select:none;
+}
+
+.choice:hover{
+transform:scale(1.08);
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+
+<div class="choice" onclick="watchTV()">
+WATCH TV
+</div>
+
+</div>
+
+<audio id="music" src="audio/mayor-theme-one.mp3" loop></audio>
+
+<script>
+
+window.onload = function(){
+
+document.body.style.opacity = "1";
+
+const music = document.getElementById("music");
+
+music.volume = 0.6;
+
+music.play().catch(() => {
+
+document.addEventListener("click", () => {
+music.play();
+},{once:true});
+
+});
+
+};
+
+function watchTV(){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+
+window.location.href =
+"watch-tv-2-text.html";
+
+},1500);
+
+}
+
+</script>
+
+</body>
+</html>

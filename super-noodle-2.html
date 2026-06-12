@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SUPER NOODLE</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{
+display:none;
+}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+50%{opacity:0;}
+}
+
+.trigger{
+color:deepskyblue;
+cursor:pointer;
+}
+
+.trigger.red-text{
+color:red;
+}
+
+.trigger:hover{
+opacity:.7;
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+<div id="text"></div>
+</div>
+
+<audio id="music" src="audio/mayor-theme-two.mp3" loop></audio>
+
+<audio id="typing1" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing2" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing3" src="audio/tom-and-jack-sound.mp3"></audio>
+
+<script>
+
+const box = document.getElementById("text");
+const music = document.getElementById("music");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+
+window.onload = function(){
+
+document.body.style.opacity = "1";
+
+music.volume = 0.6;
+
+music.play().catch(()=>{
+document.addEventListener("click",()=>{
+music.play();
+},{once:true});
+});
+
+setTimeout(startTyping,500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+function handleSpecial(soundName){
+
+if(soundName === "stopMusic"){
+music.pause();
+music.currentTime = 0;
+}
+
+}
+
+const segments = [
+
+`\t‘Oh no! Oh no!’ `,
+
+`[Lin said.]`,
+
+`\n\t‘What! They can’t do this! You dogs!’ `,
+
+`[Tom said.]`,
+
+`\n\tHarris `,
+
+`[shrugged.|red]`,
+
+`\n\t‘What are they replacing Super Noodle with?’ `,
+
+`[I asked.]`,
+
+`\n\t‘Mayor’s got a deal with Garret Hospitality, they’ll be putting in a Thai, Mexican and Japanese fusion restaurant called NutriBowl. Smallest bowl is like twenty-seven dollars lol. `,
+
+`[Soz.’]`,
+
+`\n\t‘What? Who wants that! No one in Randwood wants `,
+
+`[that!’]`,
+
+`\n\t‘Mayor does, buddy,’ he said, shoving `,
+
+`[Tom,]`,
+
+` ‘and I want it, too, you gotta `,
+
+`[problem?’|red]`,
+
+`\n\t‘Oh so it’s all for the goons in your little tower then, wanna ruin a perfectly good small business, `,
+
+`[huh!’]`,
+
+`\n\tTom lunged at Harris but I grabbed him and held him `,
+
+`[back.]`,
+
+`\n\t‘This place is decrepit! It’s a dinghy Chinese joint with graffiti all over the `,
+
+`[window!’]`,
+
+`\n\t‘I’ll have you know that ‘graffiti’ is a commissioned piece of `,
+
+`[advertising!]`,
+
+` And the tag shit is everywhere, the council should be cleaning it up!’ Tom said, then realising what he just `,
+
+`[said.]`,
+
+`\n\t‘Not in our budget. Better to just close this shitty place `,
+
+`[down.’]`,
+
+`\n\tTom gritted his `,
+
+`[teeth.]`,
+
+`\n\t‘You guys are `,
+
+`[soulless.]`,
+
+`\n\tHarris bent down and held his fists up to his `,
+
+`[eyes.|stopMusic]`,
+
+` `,
+
+`[‘Wah-wah.’]`,
+
+` He laughed, then tousled Tom’s hair, and walked `,
+
+`[out.]`,
+
+`\n\tLin was frozen in front of her `,
+
+`[bain-maries.]`,
+
+`\n\t‘Lin, we won’t let them do `,
+
+`[this.’]`,
+
+`\n\t‘Oh, Tommy, just forget it. They’ll do what they want. They won’t fix the fountain but they take my business. The big man always `,
+
+`[wins.’]`,
+
+`\n\tTom looked at me, and I looked at `,
+
+`[him.]`,
+
+` Then he stormed `,
+
+`[out.]`,
+
+` I walked out and saw what Tom was heading for, the `,
+
+`[Mayor’s tower;]`,
+
+` pristine, and unmarked by red `,
+
+`[paint.]`
+
+];
+
+let segment = 0;
+let i = 0;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+window.location.href = "tom-tag-choices-tower.html";
+},1500);
+
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let raw = current.slice(1,-1);
+let parts = raw.split("|");
+
+let word = parts[0];
+let tag = parts[1];
+
+let colourClass = "";
+
+if(tag === "red"){
+colourClass = " red-text";
+}
+
+box.innerHTML +=
+'<span class="trigger' +
+colourClass +
+'" data-special="' +
+(tag || "") +
+'">' +
+word +
+'</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+document
+.querySelectorAll(".trigger")
+.forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === "."){
+speed = 140;
+}
+
+if(current[i] === ","){
+speed = 80;
+}
+
+if(current[i] === "—"){
+speed = 110;
+}
+
+if(current[i] === "\n"){
+speed = 180;
+}
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+let clicked = event.target;
+
+if(clicked.dataset.special){
+handleSpecial(clicked.dataset.special);
+}
+
+clicked.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+</script>
+
+</body>
+</html>

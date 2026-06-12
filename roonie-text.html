@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ROONIE</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+}
+
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:6rem;
+color:limegreen;
+cursor:pointer;
+transition:opacity 1.5s ease;
+}
+
+#main{
+display:none;
+height:100vh;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{display:none;}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{50%{opacity:0;}}
+
+.trigger{
+color:limegreen;
+cursor:pointer;
+}
+
+.trigger.red-text{color:red;}
+.trigger.purple-text{color:violet;}
+
+.trigger:hover{opacity:.7;}
+
+.choice{
+color:limegreen;
+cursor:pointer;
+margin-bottom:18px;
+font-size:28px;
+transition:.2s ease;
+}
+
+.choice:hover{
+opacity:.7;
+transform:scale(1.03);
+}
+
+.fade-out{
+opacity:0 !important;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div id="titleScreen">ROONIE</div>
+
+<div id="main">
+<div class="message-box">
+<div id="text"></div>
+</div>
+</div>
+
+<audio id="roonieTheme" src="audio/roonie-theme-true.mp3" loop></audio>
+<audio id="mayorTheme" src="audio/mayor-theme-one.mp3" loop></audio>
+
+<audio id="typing1" src="audio/mayor-text-sound-one.mp3"></audio>
+<audio id="typing2" src="audio/mayor-text-sound-one.mp3"></audio>
+<audio id="typing3" src="audio/mayor-text-sound-one.mp3"></audio>
+
+<audio id="doorBash" src="audio/door-bash.mp3"></audio>
+
+<script>
+const titleScreen = document.getElementById("titleScreen");
+const main = document.getElementById("main");
+const box = document.getElementById("text");
+
+const roonieTheme = document.getElementById("roonieTheme");
+const mayorTheme = document.getElementById("mayorTheme");
+const doorBash = document.getElementById("doorBash");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+let started = false;
+
+titleScreen.onclick = function(){
+
+if(started) return;
+started = true;
+
+roonieTheme.volume = 0.6;
+mayorTheme.volume = 0.6;
+roonieTheme.play();
+
+titleScreen.classList.add("fade-out");
+
+setTimeout(function(){
+titleScreen.style.display = "none";
+main.style.display = "flex";
+
+setTimeout(function(){
+main.style.opacity = "1";
+startTyping();
+},100);
+
+},1500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+function playSpecialSound(soundName){
+
+if(soundName === "door"){
+doorBash.currentTime = 0;
+doorBash.volume = 0.75;
+doorBash.play();
+
+roonieTheme.pause();
+roonieTheme.currentTime = 0;
+}
+
+if(soundName === "mayor"){
+mayorTheme.currentTime = 0;
+mayorTheme.play();
+}
+
+}
+
+const segments = [
+
+`Roonie’s mouth was dry and she was `,
+
+`[cold.]`,
+
+` She was sitting in the dim light, `,
+
+`[thinking.]`,
+
+` She had been entertaining herself in the last couple weeks by making a chopstick sculpture of the Sydney Opera `,
+
+`[House,]`,
+
+` but she was done with `,
+
+`[that.]`,
+
+` She had read the Super Noodle menu two-thousand five hundred and fifty six times front to `,
+
+`[back.]`,
+
+` Her favourite parts of the menu to read are the ‘Sweat and Sour’ `,
+
+`[typo]`,
+
+` and the cartoonish figure of Lin on the bottom left with a speech box saying ‘Our noodles are super and so are `,
+
+`[you!’.]`,
+
+` Jeez, Lin, Roonie `,
+
+`[thought,]`,
+
+` I don’t feel so super right `,
+
+`[now.]`,
+
+` I feel like a pretty downtrodden `,
+
+`[girl.]`,
+
+` She was sat in her `,
+
+`[cage.]`,
+
+` One of six in the room. She guessed no one else has been stupid enough to go against the Mayor so they were `,
+
+`[empty.]`,
+
+`\n\tAll of a sudden, `,
+
+`[noise.|door]`,
+
+` This simple form of stimulation, the sound of the door unlocking, at this point activated Roonie’s dopamine receptors in the same way it would for a normal person if they were `,
+
+`[orgasming.]`,
+
+` Her food is delivered to her through a slit in the roof, dropped down without any regard for if the meal explodes everywhere. She hasn’t seen someone in like a `,
+
+`[week.]`,
+
+`\n\t‘Harris! Dan! Is that you guys! Hey nice of you to drop `,
+
+`[by!’|mayor]`,
+
+`\n\tThe big steel door unlocked and light was let into the room. Roonie shielded her eyes and had to adjust quickly to what was going `,
+
+`[on:]`,
+
+` a person was being dragged into the `,
+
+`[room.]`,
+
+` Her first thought wasn’t, ‘Oh no! Another prisoner!’, but, ‘Yay, a new friend!’. The person was shoved into the cage opposite `,
+
+`[hers.]`,
+
+`\n\t‘You F*CKING DOGS! What’s your `,
+
+`[PROBLEM!’]`,
+
+`\n\tDan swung the cage door shut and locked it with a big key he had tied to his `,
+
+`[waist.]`,
+
+`\n\t‘Serves you RIGHT! You NEVER mess with the `,
+
+`[MAYOR!’|red]`,
+
+`\n\tDan turned around and looked at `,
+
+`[Roonie]`,
+
+`\n\t‘How you doin’ honey `,
+
+`[bun.’|red]`,
+
+`\n\t‘Hey! Dan! Nice to see you! You remember I apologised for all that stuff with the Mayor, right? I think I’ve learnt my lesson, I’m ready to be `,
+
+`[released!’]`,
+
+`\n\tDan rubbed his `,
+
+`[chin.]`,
+
+`\n\t`,
+
+`[‘Oh yeah?’|red]`,
+
+`\n\t`,
+
+`[‘Yeah!’]`,
+
+`\n\t‘Let me talk it over with the `,
+
+`[Mayor.’]`,
+
+`\n\t`,
+
+`[‘Sweet!’]`,
+
+`\n\tDan held his hand up like it was a `,
+
+`[puppet.]`,
+
+`\n\t‘Hey Mayor, what do you think about letting Roonie out? `,
+
+`[Oh!|purple]`,
+
+`’ he said with a high-pitched intonation, ‘let, Roonie out? I thought I told you we have a no rat release `,
+
+`[policy!|purple]`,
+
+` Ohhhhh that’s right you did, `,
+
+`[you did.’|purple]`,
+
+`\n\tDan walked out of the `,
+
+`[room.]`,
+
+` Roonie couldn’t hide her `,
+
+`[excitement.]`
+
+];
+
+let segment = 0;
+let i = 0;
+let endingStarted = false;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+showChoices();
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let raw = current.slice(1,-1);
+let parts = raw.split("|");
+
+let word = parts[0];
+let tag = parts[1];
+
+let colourClass = "";
+
+if(tag === "red"){
+colourClass = " red-text";
+}
+
+if(tag === "purple"){
+colourClass = " purple-text";
+}
+
+box.innerHTML +=
+'<span class="trigger' +
+colourClass +
+'" data-special="' +
+(tag || "") +
+'">' +
+word +
+'</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+document.querySelectorAll(".trigger").forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === ".") speed = 140;
+if(current[i] === ",") speed = 80;
+if(current[i] === "—") speed = 110;
+if(current[i] === "\n") speed = 180;
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+let clicked = event.target;
+
+if(clicked.dataset.special){
+playSpecialSound(clicked.dataset.special);
+}
+
+clicked.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+function showChoices(){
+
+box.innerHTML += `
+
+<br><br>
+CHOOSE WHAT TO SAY:
+<br><br>
+
+<div class="choice" onclick="pickChoice()">
+Hey new friend!
+</div>
+
+<div class="choice" onclick="pickChoice()">
+So what are you in here for?
+</div>
+
+<div class="choice" onclick="pickChoice()">
+Hey it’s not so bad in the cage!
+</div>
+
+<div class="choice" onclick="pickChoice()">
+What’s the weather outside please tell me I’ve been in here for almost two months please God save us all
+</div>
+
+<div class="choice" onclick="pickChoice()">
+Do you like Super Noodle?
+</div>
+
+`;
+
+box.scrollTop = box.scrollHeight;
+
+}
+
+function pickChoice(){
+
+if(endingStarted) return;
+endingStarted = true;
+
+box.innerHTML +=
+`\n\t‘F*CK OFF!’ the new caged person `;
+
+box.innerHTML +=
+'<span class="trigger" onclick="showOkay()">said.</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+}
+
+function showOkay(){
+
+box.innerHTML +=
+`\n\t`;
+
+box.innerHTML +=
+'<span class="trigger" onclick="finishScene()">‘Okay.’</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+}
+
+function finishScene(){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+
+window.location.href =
+"to-be-continued.html";
+
+},1500);
+
+}
+
+</script>
+
+</body>
+</html>

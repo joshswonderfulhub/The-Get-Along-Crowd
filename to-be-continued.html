@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TO BE CONTINUED</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:black;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Changa One', sans-serif;
+}
+
+.title{
+text-align:center;
+font-size:5.5rem;
+line-height:1.1;
+animation:wobble 2s ease-in-out infinite;
+}
+
+.to-be{
+color:yellow;
+}
+
+.continued{
+color:red;
+}
+
+@keyframes wobble{
+0%{transform:rotate(0deg) translateY(0);}
+25%{transform:rotate(-2deg) translateY(-5px);}
+50%{transform:rotate(2deg) translateY(4px);}
+75%{transform:rotate(-1deg) translateY(-3px);}
+100%{transform:rotate(0deg) translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="title">
+  <div class="to-be">TO BE</div>
+  <div class="continued">CONTINUED...</div>
+</div>
+
+<audio id="music" src="audio/tom-and-jack-theme.mp3" loop></audio>
+
+<script>
+window.onload = function(){
+
+const music = document.getElementById("music");
+music.volume = 0.6;
+
+music.play().catch(()=>{
+document.addEventListener("click",()=>{
+music.play();
+},{once:true});
+});
+
+};
+</script>
+
+</body>
+</html>

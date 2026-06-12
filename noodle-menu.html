@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SUPER NOODLE</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.choice{
+font-size:3.5rem;
+cursor:pointer;
+color:red;
+transition:.2s ease;
+user-select:none;
+}
+
+.choice:hover{
+transform:scale(1.08);
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+
+<div class="choice" onclick="goToNoodle()">
+SUPER NOODLE
+</div>
+
+</div>
+
+<audio id="spraySound" src="audio/spray-paint.mp3"></audio>
+
+<script>
+
+window.onload = function(){
+document.body.style.opacity = "1";
+};
+
+function goToNoodle(){
+
+const spray =
+document.getElementById("spraySound");
+
+spray.volume = 0.8;
+spray.currentTime = 0;
+spray.play();
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+
+window.location.href =
+"super-noodle-text.html";
+
+},1500);
+
+}
+
+</script>
+
+</body>
+</html>

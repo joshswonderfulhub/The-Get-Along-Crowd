@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BENCH</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{
+display:none;
+}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+50%{opacity:0;}
+}
+
+.trigger{
+color:deepskyblue;
+cursor:pointer;
+}
+
+.trigger:hover{
+opacity:.7;
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+<div id="text"></div>
+</div>
+
+<audio id="music" src="audio/tom-and-jack-theme.mp3" loop></audio>
+
+<audio id="typing1" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing2" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing3" src="audio/tom-and-jack-sound.mp3"></audio>
+
+<audio id="spray" src="audio/spray-paint.mp3"></audio>
+
+<script>
+
+const box = document.getElementById("text");
+const music = document.getElementById("music");
+const spray = document.getElementById("spray");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+
+window.onload = function(){
+
+document.body.style.opacity = "1";
+
+music.volume = 0.6;
+
+music.play().catch(()=>{
+document.addEventListener("click",()=>{
+music.play();
+},{once:true});
+});
+
+setTimeout(startTyping,500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+function playSpray(){
+spray.currentTime = 0;
+spray.volume = 0.7;
+spray.play();
+}
+
+const segments = [
+
+`We went over to one of the fully white, poo-stained benches that Tom had been `,
+
+`[saving.]`,
+
+` The birds in Randwood are different, they poo at extraordinary rates. Everywhere you look is white mess from pigeons and magpies, on the footpaths and the stainless-steel bollards and especially on the `,
+
+`[benches.]`,
+
+` Tom had been saving this one, having not touched it for a week until this moment, letting the birds create a fresh canvas for `,
+
+`[him.]`,
+
+` Neither the poo nor Tom’s beautiful art is ever cleaned `,
+
+`[up.]`,
+
+`\n\tTom and I marveled at the fresh newness of the bench and then Tom goes at `,
+
+`[it,|spray]`,
+
+` writing the letters of our `,
+
+`[organisation]`,
+
+`—an organisation Tom and I came up with and in which we are the only members—`,
+
+`[SGP]`,
+
+`, or ‘Squirting Pussy `,
+
+`[Gang’]`,
+
+`. Tom sprayed away and I filmed it for our Instagram which has around, okay exactly, 48 `,
+
+`[followers.]`,
+
+`\n\t‘Yeahhhhhhh, fresh stain, sucka!’ Tommy said.`,
+
+`\n\t‘Beautiful work, matey’ `,
+
+`[I said.]`
+
+];
+
+let segment = 0;
+let i = 0;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+window.location.href = "noodle-menu.html";
+},1500);
+
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let raw = current.slice(1,-1);
+let parts = raw.split("|");
+
+let word = parts[0];
+let sound = parts[1];
+
+box.innerHTML +=
+'<span class="trigger" data-sound="' +
+(sound || "") +
+'">' +
+word +
+'</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+document
+.querySelectorAll(".trigger")
+.forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === "."){
+speed = 140;
+}
+
+if(current[i] === ","){
+speed = 80;
+}
+
+if(current[i] === "—"){
+speed = 110;
+}
+
+if(current[i] === "\n"){
+speed = 180;
+}
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+let clicked = event.target;
+
+if(clicked.dataset.sound === "spray"){
+playSpray();
+}
+
+clicked.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+</script>
+
+</body>
+</html>

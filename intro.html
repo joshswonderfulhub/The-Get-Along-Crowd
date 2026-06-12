@@ -2,26 +2,42 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Intro</title>
+<title>DA MAYOR</title>
 
-<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
 background:black;
 color:white;
+font-family:'Changa One', sans-serif;
 height:100vh;
+overflow:hidden;
+}
+
+/* TITLE */
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
 display:flex;
 justify-content:center;
 align-items:center;
-font-family:'VT323', monospace;
+font-size:5rem;
+cursor:pointer;
+transition:opacity 1.5s ease;
+}
+
+#main{
+display:none;
+height:100%;
+justify-content:center;
+align-items:center;
 }
 
 .message-box{
@@ -33,281 +49,234 @@ padding:55px;
 }
 
 #text{
-font-size:34px;
+font-size:28px;
 line-height:1.8;
 white-space:pre-wrap;
-
 height:100%;
 overflow-y:auto;
-padding-right:15px;
-
 scrollbar-width:none;
 }
-
-#text::-webkit-scrollbar{
-display:none;
-}
+#text::-webkit-scrollbar{display:none;}
 
 .cursor{
 animation:blink 1s step-end infinite;
 }
-
-@keyframes blink{
-50%{
-opacity:0;
-}
-}
+@keyframes blink{50%{opacity:0;}}
 
 .trigger{
-color:lightblue;
+color:red;
 cursor:pointer;
 }
-
-.trigger:hover{
-opacity:.7;
-}
+.trigger:hover{opacity:.7;}
 
 .fade-out{
 opacity:0;
-transition:opacity 1.8s ease;
+transition:opacity 1.5s ease;
 }
 
 </style>
 </head>
 <body>
 
-<div class="message-box">
-<div id="text"></div>
+<div id="titleScreen">DA MAYOR</div>
+
+<div id="main">
+  <div class="message-box">
+    <div id="text"></div>
+  </div>
 </div>
 
-<!-- 🎵 BACKGROUND MUSIC -->
-<audio id="bgMusic" loop>
-  <source src="audio/intro-anthem-main.mp3" type="audio/mpeg">
-</audio>
+<!-- AUDIO -->
+<audio id="music" src="audio/mayor-theme-one.mp3" loop></audio>
+<audio id="typingSound" src="audio/mayor-text-sound-one.mp3"></audio>
 
 <script>
 
-const segments=[
+/* ---------- ELEMENTS ---------- */
+const title = document.getElementById("titleScreen");
+const main = document.getElementById("main");
+const music = document.getElementById("music");
+const typingSound = document.getElementById("typingSound");
+const box = document.getElementById("text");
 
-`HEY!
+/* ---------- TITLE CLICK ---------- */
+title.onclick = () => {
 
-How are you `,
+  music.volume = 0.6;
+  music.play();
 
-`[[buddy?]]`,
+  title.classList.add("fade-out");
 
-`
+  setTimeout(()=>{
+    title.style.display="none";
+    main.style.display="flex";
+    startTyping();
+  },1500);
+};
 
-Are you ready to get to `,
+/* ---------- SCRIPT ---------- */
 
-`[[work?]]`,
+const segments = [
 
-`
+`Eugh. `,
 
-GREAT! I assume you said YES and not NO. `,
+`[The mayor looked down today.]`,
 
-`[[Haha.]]`,
+` He has these giant picture windows at the top floor of his skyscraper, a beautiful penthouse view of Melbourne in all its glory, that he gazes upon `,
 
-`
+`[regularly,]`,
 
-Okay so we need YOU to make some `,
+` but he never looks `,
 
-`[[decisions.]]`,
+`[down.]`,
 
-`
+` Today he looked `,
 
-You're going to be some sort of GOD basically for all the residents of `,
+`[down.]`,
 
-`[[Randwood.]]`,
+` The one sore spot of this city, his kingdom, his ugly little kingdom—`,
 
-`
+`[Randwood.]`,
 
-These people are lost and they `,
+` And the hub of it, Randwood Central, with the useless little fountain, and the rubbish, and the bums, and the disgusting little drones that all inhabit the `,
 
-`[[don’t even know it. They don't know anything!]]`,
+`[place.]`,
 
-`
+` He wanted to `,
 
-These people need decisions `,
+`[vomit.]`,
 
-`[[from you.]]`,
+` It astounds him, really. That they persist in this `,
 
-`
+`[place.]`,
 
-You’ll be monitoring blogs from these individuals and you’ll be making decisions for `,
+` It’s laughable, `,
 
-`[[them.]]`,
+`[haha.]`,
 
-`
+` Makes him `,
 
-`,
+`[laugh.]`,
 
-`[[Easy decisions.]]`,
+` He shook his head. He was thankful that they `,
 
-` `,
+`[do.]`,
 
-`[[Hard decisions.]]`,
+` He was truly `,
 
-` `,
+`[thankful.]`,
 
-`[[Every decision!]]`,
+` He disrobed and hopped into his gold-plated hot tub—it keeps him very warm in a harsh, unforgiving Melbourne Winter—and poured a glass of 2008 Krug, sipping it, `,
 
-`
-Some will be more straight forward than others.
-
-Some will be weird and strange and strange and `,
-
-`[[weird.]]`,
-
-`
-
-But that’s `,
-
-`[[okay.]]`,
-
-`
-
-You’re going to be `,
-
-`[[okay.]]`,
-
-`
-
-Your first individual is ready to be assessed.
-
-Go on. `,
-
-`[[Go.]]`
+`[slowly.]`
 
 ];
 
-const box=document.getElementById("text");
+let segment = 0;
+let i = 0;
 
-/* 🎵 music setup */
-const music = document.getElementById("bgMusic");
-music.volume = 0.6;
-let musicStarted = false;
+/* ---------- TYPE SYSTEM ---------- */
 
-let segment=0;
-let i=0;
+function playTypeSound(){
+
+  // only trigger occasionally
+  if(Math.random() < 0.55){
+
+    typingSound.currentTime = 0;
+
+    typingSound.playbackRate =
+      0.8 + Math.random() * 0.5;
+
+    typingSound.volume = 0.20;
+
+    typingSound.play();
+  }
+
+}
+
+function startTyping(){
+  typeSegment();
+}
 
 function typeSegment(){
 
-if(segment>=segments.length){
+if(segment >= segments.length){
+  return;
+}
+
+let current = segments[segment];
+
+/* CLICKABLE */
+if(current.startsWith("[") && current.endsWith("]")){
+
+let word = current.slice(1,-1);
+
+box.innerHTML += `<span class="trigger">${word}</span>`;
+box.scrollTop = box.scrollHeight;
+
+document.querySelectorAll(".trigger").forEach(t=>{
+  t.onclick = continueTyping;
+});
+
 return;
 }
 
-let current=segments[segment];
-
-/* clickable trigger words */
-if(current.includes("[[")){
-
-let word=
-current
-.replace("[[","")
-.replace("]]","");
-
-box.innerHTML+=
-'<span class="trigger" onclick="continueTyping()">'+
-word+
-'</span>';
-
-box.scrollTop=box.scrollHeight;
-
-return;
-}
-
+/* NORMAL TEXT */
 function typeLetter(){
 
-if(i>=current.length){
-i=0;
-segment++;
-typeSegment();
-return;
+if(i >= current.length){
+  i = 0;
+  segment++;
+  typeSegment();
+  return;
 }
 
-box.innerHTML=
-box.innerHTML+
-current.charAt(i)+
-'<span class="cursor">|</span>';
+playTypeSound();
 
-box.innerHTML=
-box.innerHTML.replace(
-/<span class="cursor">\|<\/span>(?!.*cursor)/g,
-''
+box.innerHTML += current.charAt(i) + '<span class="cursor">|</span>';
+
+box.innerHTML = box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,''
 );
 
-box.scrollTop=box.scrollHeight;
+box.scrollTop = box.scrollHeight;
 
-let speed=34+Math.random()*22;
+let char = current[i];
+let speed = 22 + Math.random()*14; // faster + more human
 
-if(current[i]==="."){
-speed=180;
-}
-
-if(current[i]===","){
-speed=120;
-}
+if(char === ".") speed = 140;
+if(char === ",") speed = 80;
+if(char === "—") speed = 110;
 
 i++;
 
-setTimeout(typeLetter,speed);
-
+setTimeout(typeLetter, speed);
 }
 
 typeLetter();
 
 }
 
+/* ---------- CONTINUE ---------- */
+
 function continueTyping(){
-
-/* 🔊 start music on first user interaction */
-if(!musicStarted){
-music.play();
-musicStarted = true;
-}
-
-document
-.querySelectorAll(".trigger")
-.forEach(t=>{
-t.onclick=null;
-});
 
 segment++;
 
-if(segment>=segments.length){
+if(segment >= segments.length){
 
-/* 🎵 fade out music */
-let fadeAudio = setInterval(function(){
-
-if(music.volume > 0.02){
-music.volume -= 0.02;
-}else{
-music.volume = 0;
-clearInterval(fadeAudio);
-music.pause();
-}
-
-},60);
-
-/* fade screen */
 document.body.classList.add("fade-out");
 
-setTimeout(function(){
-window.location.href="page2.html";
-},1800);
+setTimeout(()=>{
+  window.location.href = "intro-mayor-choice-one.html";
+},1500);
 
 return;
-
 }
 
 typeSegment();
 
 }
-
-/* start typing ONLY (no autoplay audio) */
-setTimeout(function(){
-typeSegment();
-},800);
 
 </script>
 

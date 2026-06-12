@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>REQUEST FOOD</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{
+display:none;
+}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+50%{opacity:0;}
+}
+
+.trigger{
+color:red;
+cursor:pointer;
+}
+
+.trigger:hover{
+opacity:.7;
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+<div id="text"></div>
+</div>
+
+<audio id="music" src="audio/mayor-theme-one.mp3" loop></audio>
+
+<audio id="typing1" src="audio/mayor-text-sound-one.mp3"></audio>
+<audio id="typing2" src="audio/mayor-text-sound-one.mp3"></audio>
+<audio id="typing3" src="audio/mayor-text-sound-one.mp3"></audio>
+
+<audio id="bell" src="audio/bellringing.mp3"></audio>
+
+<script>
+
+const box = document.getElementById("text");
+const music = document.getElementById("music");
+const bell = document.getElementById("bell");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+
+window.onload = function(){
+
+document.body.style.opacity = "1";
+
+music.volume = 0.6;
+
+music.play().catch(()=>{
+document.addEventListener("click",()=>{
+music.play();
+},{once:true});
+});
+
+setTimeout(startTyping,500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+function playBell(){
+bell.currentTime = 0;
+bell.volume = 0.7;
+bell.play();
+}
+
+const segments = [
+
+`The Mayor rang his bell super `,
+
+`[hard.|bell]`,
+
+`\n\t‘Yoo-hoo! Emma!’\n`,
+
+`A woman in a tight red rayon mini dress walked into the room with a big plate of `,
+
+`[steaks.]`,
+
+`The Mayor paddled over to the edge of the tub and grabbed a juicy piece of filet mignon and took a massive bite out of `,
+
+`[it.]`,
+
+`\n\t`,
+
+`[‘Yum!’]`,
+
+`\n\t‘Do you want some head `,
+
+`[Mayor?’]`,
+
+`\n\t‘Eh, nah. Just the steak, `,
+
+`[hun.’]`,
+
+`\n\t`,
+
+`[‘No handy?’]`,
+
+`\n\t`,
+
+`[‘No! Not right now!’]`,
+
+`\n\t`,
+
+`[The woman shrugged and left the room.]`
+
+];
+
+let segment = 0;
+let i = 0;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+window.location.href = "call-boys.html";
+},1500);
+
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let raw = current.slice(1,-1);
+let parts = raw.split("|");
+
+let word = parts[0];
+let sound = parts[1];
+
+box.innerHTML +=
+'<span class="trigger" data-sound="' +
+(sound || "") +
+'">' +
+word +
+'</span>';
+
+box.scrollTop = box.scrollHeight;
+
+document
+.querySelectorAll(".trigger")
+.forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === "."){
+speed = 140;
+}
+
+if(current[i] === ","){
+speed = 80;
+}
+
+if(current[i] === "—"){
+speed = 110;
+}
+
+if(current[i] === "\n"){
+speed = 180;
+}
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+let clicked = event.target;
+
+if(clicked.dataset.sound === "bell"){
+playBell();
+}
+
+clicked.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+</script>
+
+</body>
+</html>

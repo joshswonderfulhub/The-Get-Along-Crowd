@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SUPER NOODLE</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{
+display:none;
+}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+50%{opacity:0;}
+}
+
+.trigger{
+color:deepskyblue;
+cursor:pointer;
+}
+
+.trigger.red-text{
+color:red;
+}
+
+.trigger:hover{
+opacity:.7;
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+<div id="text"></div>
+</div>
+
+<audio id="tomTheme" src="audio/tom-and-jack-theme.mp3" loop></audio>
+<audio id="mayorTheme" src="audio/mayor-theme-one.mp3" loop></audio>
+
+<audio id="typing1" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing2" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing3" src="audio/tom-and-jack-sound.mp3"></audio>
+
+<audio id="pigeonSound" src="audio/pigeon.mp3"></audio>
+
+<script>
+
+const box = document.getElementById("text");
+
+const tomTheme = document.getElementById("tomTheme");
+const mayorTheme = document.getElementById("mayorTheme");
+const pigeonSound = document.getElementById("pigeonSound");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+
+window.onload = function(){
+
+document.body.style.opacity = "1";
+
+tomTheme.volume = 0.6;
+mayorTheme.volume = 0.6;
+
+tomTheme.play().catch(()=>{
+document.addEventListener("click",()=>{
+tomTheme.play();
+},{once:true});
+});
+
+setTimeout(startTyping,500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+function playSpecialSound(soundName){
+
+if(soundName === "pigeon"){
+pigeonSound.currentTime = 0;
+pigeonSound.volume = 0.7;
+pigeonSound.play();
+}
+
+if(soundName === "stopTom"){
+tomTheme.pause();
+tomTheme.currentTime = 0;
+}
+
+if(soundName === "mayor"){
+tomTheme.pause();
+mayorTheme.currentTime = 0;
+mayorTheme.play();
+}
+
+}
+
+const segments = [
+
+`Super Noodle is like our second home, and Lin is like our second Mother.`,
+
+`\n\t‘Boys! Hello, hello!’ she said, greeting us as we `,
+
+`[walked in.]`,
+
+` She was at the bain-marie with her hair tied back and she wore her ever wonderful smile, with her beautiful `,
+
+`[crows feet.]`,
+
+`\n\t‘Hey, what’s up Lin!’ Tom `,
+
+`[said.]`,
+
+`\n\t‘I love your artwork out the front, boys, very `,
+
+`[nice!’]`,
+
+`\n\tTom would never tag Lin’s shop, unless she expressly asked him to. The other day she found her shop-front looking a bit `,
+
+`[empty,]`,
+
+` so she hired Tom to do a little bit of advertising.\n\tHe sprayed the front in the neatest lettering you could `,
+
+`[imagine:]`,
+
+` ‘Cum here for great Chinese food! :)’, and below that, ‘$7 plates! Get ‘em while they’re `,
+
+`[hot!’.]`,
+
+`\n\t‘No worries, `,
+
+`[Lin!’]`,
+
+`\n\t‘Free food for life you boys, free food for `,
+
+`[life!’]`,
+
+`\n\tWe smiled at each other. Lin’s prices were insane, only eight bucks for like three of any protein or dish you want, you can get a bucket of sweet and sour pork, fried rice, and stir-fry beef noodles for `,
+
+`[$7!]`,
+
+` It’s ridiculous! She may as well be giving it away for free. She’s a treasured icon in our `,
+
+`[community.]`,
+
+`\n\t‘The usual?’\n\t‘Yep!’ we both `,
+
+`[said.]`,
+
+`\n\tLin started to shovel food onto paper `,
+
+`[plates.]`,
+
+`\n\t‘One of the Mayor’s police came in today, I don’t trust them.’\n\t‘Eh, they’re alright, never given me any `,
+
+`[trouble.’]`,
+
+`\n\t‘No, boy, I do not trust them,’ she shook her head but then smiled. ‘And what have you boys been up to `,
+
+`[today?’]`,
+
+`\n\t‘Well we tagged foodworks and a bench and a `,
+
+`[pigeon.’|pigeon]`,
+
+`\n\t‘Oh ho ho ho! You boys are `,
+
+`[cheeky!’|stopTom]`,
+
+`\n\tJust as Lin was about to hand us our plates, one of the Mayor’s top coppas (Harris I think?) walked into Super `,
+
+`[Noodle.|mayor]`,
+
+`\n\t‘You again? Hungry `,
+
+`[still?’]`,
+
+`\n\t‘Nah, nah,’—Harris chucked a letter onto the bench in front of Lin—’just got a message to `,
+
+`[deliver.’|red]`,
+
+`\n\tLin raised her eyebrow and then ripped open the letter with her frail hands. She tried to read but the lettering was too small for her aging `,
+
+`[eyes.]`,
+
+`\n\t‘Jackson, here, `,
+
+`[read this.]`
+
+];
+
+let segment = 0;
+let i = 0;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+
+window.location.href =
+"mayor-letter.html";
+
+},1500);
+
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let raw = current.slice(1,-1);
+let parts = raw.split("|");
+
+let word = parts[0];
+let sound = parts[1];
+
+let colourClass = "";
+
+if(sound === "red"){
+colourClass = " red-text";
+}
+
+box.innerHTML +=
+'<span class="trigger' +
+colourClass +
+'" data-sound="' +
+(sound || "") +
+'">' +
+word +
+'</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+document
+.querySelectorAll(".trigger")
+.forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === "."){
+speed = 140;
+}
+
+if(current[i] === ","){
+speed = 80;
+}
+
+if(current[i] === "—"){
+speed = 110;
+}
+
+if(current[i] === "\n"){
+speed = 180;
+}
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+let clicked = event.target;
+
+if(clicked.dataset.sound){
+playSpecialSound(clicked.dataset.sound);
+}
+
+clicked.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+</script>
+
+</body>
+</html>

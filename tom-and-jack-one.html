@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TOM AND JACKSON</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+}
+
+/* TITLE SCREEN */
+#titleScreen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:28px;
+font-size:5rem;
+cursor:pointer;
+opacity:1;
+transition:opacity 1.5s ease;
+}
+
+.tom{
+color:red;
+}
+
+.jackson{
+color:yellow;
+}
+
+/* MAIN TEXT SCREEN */
+#main{
+display:none;
+height:100vh;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{
+display:none;
+}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+50%{opacity:0;}
+}
+
+.trigger{
+color:deepskyblue;
+cursor:pointer;
+}
+
+.trigger:hover{
+opacity:.7;
+}
+
+.fade-out{
+opacity:0 !important;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div id="titleScreen">
+<span class="tom">TOM</span>
+<span class="jackson">AND JACKSON</span>
+</div>
+
+<div id="main">
+  <div class="message-box">
+    <div id="text"></div>
+  </div>
+</div>
+
+<audio id="music" src="audio/tom-and-jack-theme.mp3" loop></audio>
+
+<audio id="typing1" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing2" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing3" src="audio/tom-and-jack-sound.mp3"></audio>
+
+<script>
+
+const titleScreen = document.getElementById("titleScreen");
+const main = document.getElementById("main");
+const box = document.getElementById("text");
+const music = document.getElementById("music");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+let started = false;
+
+titleScreen.onclick = function(){
+
+if(started) return;
+started = true;
+
+music.volume = 0.6;
+music.play();
+
+titleScreen.classList.add("fade-out");
+
+setTimeout(function(){
+
+titleScreen.style.display = "none";
+main.style.display = "flex";
+
+setTimeout(function(){
+main.style.opacity = "1";
+startTyping();
+},100);
+
+},1500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+const segments = [
+
+` `,
+
+`[Randwood Central]`,
+
+`. We always seem to come back. I dunno why, we must `,
+
+`[like it.]`,
+
+` Every day I ask Tom, ‘hey you wanna do `,
+
+`[something?’,]`,
+
+` and he goes, ‘yeah’, and I go, `,
+
+`[‘what should we do?’,]`,
+
+` and he says, ‘I dunno, meet at Randwood Central and we’ll `,
+
+`[decide.’]`,
+
+`\n\tRandwood Central is really a beautiful place if you think about it, probably only to those who live in `,
+
+`[Randwood.]`,
+
+` I love our run-down fountain with the kookaburra spout that has long since stopped `,
+
+`[functioning,]`,
+
+` a pool of water as brown as the Yarra gently resting at the `,
+
+`[bottom.]`,
+
+` Pieces of crumpled paper slowly glide through it in the cold Melbourne winter `,
+
+`[wind.]`,
+
+` And I love our lack of public bins, with the stray Oak bottles and rogue plastic bags and the like always strolling along our footpaths as if they were `,
+
+`[locals.]`,
+
+` And I love Jimmy, our resident bum, and the foodworks, and our benches especially, yes our `,
+
+`[benches.]`,
+
+`\n\tI met Tom that day under the stringy bark right next to the `,
+
+`[fountain.]`,
+
+`\n\t`,
+
+`[‘Wassup.’]`,
+
+`\n\t`,
+
+`[‘Wassup.’]`,
+
+`\n\tTom kind of perennially has a can of red spray paint in his hands at all `,
+
+`[times,]`,
+
+` he’s tagged-up basically every flat, round, bumpy, soft, hard, surface you can think of around our suburbs `,
+
+`[hub.]`,
+
+` The council never cleans it and it’s another reason why we love Randwood Central, it’s our personal `,
+
+`[playground.]`,
+
+`\n\t‘So loike, what should I tag `,
+
+`[today?’]`
+
+];
+
+let segment = 0;
+let i = 0;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+
+main.classList.add("fade-out");
+
+setTimeout(function(){
+window.location.href = "tag-menu.html";
+},1500);
+
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let word = current.slice(1,-1);
+
+box.innerHTML +=
+'<span class="trigger">' +
+word +
+'</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+document
+.querySelectorAll(".trigger")
+.forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === "."){
+speed = 140;
+}
+
+if(current[i] === ","){
+speed = 80;
+}
+
+if(current[i] === "—"){
+speed = 110;
+}
+
+if(current[i] === "\n"){
+speed = 180;
+}
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+event.target.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CALL THE BOYS</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{
+display:none;
+}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+50%{opacity:0;}
+}
+
+.trigger{
+color:red;
+cursor:pointer;
+}
+
+.trigger:hover{
+opacity:.7;
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+<div id="text"></div>
+</div>
+
+<audio id="music" src="audio/mayor-theme-one.mp3" loop></audio>
+
+<audio id="typing1" src="audio/mayor-text-sound-one.mp3"></audio>
+<audio id="typing2" src="audio/mayor-text-sound-one.mp3"></audio>
+<audio id="typing3" src="audio/mayor-text-sound-one.mp3"></audio>
+
+<script>
+
+const box = document.getElementById("text");
+const music = document.getElementById("music");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+
+window.onload = function(){
+
+document.body.style.opacity = "1";
+
+music.volume = 0.6;
+
+music.play().catch(()=>{
+document.addEventListener("click",()=>{
+music.play();
+},{once:true});
+});
+
+setTimeout(startTyping,500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+const segments = [
+
+`Harris and Dan, dressed head-to-toe in Randwood Police gear, walked into the `,
+
+`[room.]`,
+
+`\n\t‘Sir!’ they both yelled in unison, saluting the `,
+
+`[Mayor.]`,
+
+`\n\t‘How’s our little caged rat `,
+
+`[doing?’]`,
+
+`\n\t‘Ahh yeah, that little rat!’ `,
+
+`[Harris said.]`,
+
+`\n\t‘Yeah! That little snakey fucking ratty arse dumb fucking retarded arse rat!’ Dan said with a wild `,
+
+`[smile.]`,
+
+`\n\t‘Um, yes,’ he awkwardly looked at Harris. Dan saw this and looked down at his feet in shame. ‘How is she doing, `,
+
+`[Harris?’]`,
+
+`\n\t‘She’s fine, just gave her some Chinese from `,
+
+`[Super.’]`,
+
+`\n\tThe Mayor snapped his `,
+
+`[fingers.]`,
+
+`\n\t‘Ah very good, that reminds `,
+
+`[me,’]`,
+
+` he hopped out of the tub wearing nothing but budgies, and walked over to his mahogany `,
+
+`[dresser.]`,
+
+` He pulled out a letter from the drawer and gave it to Harris, ‘I need you to do something for `,
+
+`[me.’]`
+
+];
+
+let segment = 0;
+let i = 0;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+window.location.href = "tom-and-jack-one.html";
+},1500);
+
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let word = current.slice(1,-1);
+
+box.innerHTML +=
+'<span class="trigger">' +
+word +
+'</span>';
+
+box.scrollTop = box.scrollHeight;
+
+document
+.querySelectorAll(".trigger")
+.forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === "."){
+speed = 140;
+}
+
+if(current[i] === ","){
+speed = 80;
+}
+
+if(current[i] === "—"){
+speed = 110;
+}
+
+if(current[i] === "\n"){
+speed = 180;
+}
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+event.target.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+</script>
+
+</body>
+</html>

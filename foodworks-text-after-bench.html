@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FOODWORKS</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background:black;
+color:white;
+font-family:'Changa One', sans-serif;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:opacity 1.5s ease;
+}
+
+.message-box{
+width:75vw;
+max-width:950px;
+height:72vh;
+border:1px solid white;
+padding:55px;
+}
+
+#text{
+font-size:28px;
+line-height:1.8;
+white-space:pre-wrap;
+height:100%;
+overflow-y:auto;
+scrollbar-width:none;
+}
+
+#text::-webkit-scrollbar{
+display:none;
+}
+
+.cursor{
+animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+50%{opacity:0;}
+}
+
+.trigger{
+color:deepskyblue;
+cursor:pointer;
+}
+
+.trigger:hover{
+opacity:.7;
+}
+
+.fade-out{
+opacity:0;
+transition:opacity 1.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="message-box">
+<div id="text"></div>
+</div>
+
+<audio id="music" src="audio/tom-and-jack-theme.mp3" loop></audio>
+
+<audio id="typing1" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing2" src="audio/tom-and-jack-sound.mp3"></audio>
+<audio id="typing3" src="audio/tom-and-jack-sound.mp3"></audio>
+
+<audio id="whistle" src="audio/whistling.mp3"></audio>
+<audio id="lighter" src="audio/lighter.mp3"></audio>
+<audio id="spray" src="audio/spray-paint.mp3"></audio>
+
+<script>
+
+const box = document.getElementById("text");
+const music = document.getElementById("music");
+const whistle = document.getElementById("whistle");
+const lighter = document.getElementById("lighter");
+const spray = document.getElementById("spray");
+
+const voices = [
+document.getElementById("typing1"),
+document.getElementById("typing2"),
+document.getElementById("typing3")
+];
+
+let voiceIndex = 0;
+
+window.onload = function(){
+
+document.body.style.opacity = "1";
+
+music.volume = 0.6;
+
+music.play().catch(()=>{
+document.addEventListener("click",()=>{
+music.play();
+},{once:true});
+});
+
+setTimeout(startTyping,500);
+
+};
+
+function playTypeSound(){
+
+if(Math.random() < 0.65){
+
+let v = voices[voiceIndex];
+
+v.currentTime = 0;
+v.playbackRate = 0.85 + Math.random()*0.45;
+v.volume = 0.22;
+v.play();
+
+voiceIndex++;
+
+if(voiceIndex >= voices.length){
+voiceIndex = 0;
+}
+
+}
+
+}
+
+function playSpecialSound(soundName){
+
+let s = null;
+
+if(soundName === "whistle") s = whistle;
+if(soundName === "lighter") s = lighter;
+if(soundName === "spray") s = spray;
+
+if(s){
+s.currentTime = 0;
+s.volume = 0.9;
+s.play();
+}
+
+}
+
+const segments = [
+
+`We walked over to the Foodworks while Tom shook his can, `,
+
+`[whistling.|whistle]`,
+
+` The windows already had a bunch of SGP tags on them, but half-faded, from someone trying to wipe them off. As we approached the window and Tom aimed his can, Jon stormed `,
+
+`[out.]`,
+
+`\n\t‘No! No, no, no! Please guys! Just leave my humble store `,
+
+`[alone!’]`,
+
+`\n\t‘Jon, how many times have we been over `,
+
+`[this?’]`,
+
+`\n\tTom started tagging Jon’s store when Jon started price gouging, there are enough of the Mayor’s workforce coming into the store to buy stuff at a ridiculous price that he can keep afloat but for the other residents his recent practice has come at the cost of many residents' `,
+
+`[wellbeing.]`,
+
+`\n\t‘So many, but please! I’m begging you, man to `,
+
+`[man!’]`,
+
+`\n\tWe were only 16 and 17, but we liked being called men, and so we entertained Jon a bit, even though we heavily disliked `,
+
+`[him.]`,
+
+`\n\t‘Yeah okay, as men, what’s in it for us if I `,
+
+`[stop?’]`,
+
+`\n\t‘I can’t, listen, I can’t give you anything per `,
+
+`[say—’]`,
+
+`\n\tTom shook his `,
+
+`[can.]`,
+
+`\n\t‘Okay! Free uhh, free groceries, FIVE dollars a week, yeah? That’s pretty good, `,
+
+`[yeah?’]`,
+
+`\n\t‘I want `,
+
+`[ciggies.’]`,
+
+`\n\t‘Yeah, me too,’ `,
+
+`[I said.’]`,
+
+`\n\t‘You guys are underage, I can't, I would, but I don't wanna get in trouble, you `,
+
+`[see?’]`,
+
+`\n\t‘Do you ever see the police around here stopping any crime? If they never stop me tagging they’re not gonna stop you from handing us `,
+
+`[ciggs.’]`,
+
+`\n\tJon thought it `,
+
+`[over.]`,
+
+`\n\t‘Jon you probably started smoking at 15, right?’ Tom `,
+
+`[asked.]`,
+
+`\n\t‘I was 13 actually,’ Jon chuckled, in a state of `,
+
+`[reverie.]`,
+
+`\n\t‘Exactly! So you won’t get in trouble, and I won’t tell anyone and I’ll stop tagging your `,
+
+`[shop!’]`,
+
+`\n\tJon looked left and `,
+
+`[right.]`,
+
+`\n\t‘It’s fine! Just get us the ciggs, `,
+
+`[bro.’]`,
+
+`\n\tJon nervously walked back into the FoodWorks. He walked out with a suspiciously cigarette-pack-shaped-looking outline in his pocket. He slowly crept over to us looking around, nervously, and then quickly whipped out a pack of blue Manchesters and handed them to Tom.\n\t‘Quickly! Put them in your `,
+
+`[pocket!’]`,
+
+`\n\tTom took the pack in a calm manner and then slipped one cigg out for me and one out for `,
+
+`[him.]`,
+
+`\n\t‘Don’t do it `,
+
+`[here!’|lighter]`,
+
+`\n\tTom lit up my cigg and then `,
+
+`[his.]`,
+
+` ‘Who’s gonna stop us?’ he said, calmly, before spraying the window of `,
+
+`[FoodWorks,|spray]`,
+
+` spraying over the word ‘Food’ with the word `,
+
+`[‘Gay’,]`,
+
+` and the word ‘Works’ with `,
+
+`[‘Cock’.]`,
+
+`\n\t‘WHAT THE HELL! YOU SAID YOU WOULDN’T DO `,
+
+`[THAT!’]`,
+
+`\n\t‘Who’s gonna stop `,
+
+`[me?’]`,
+
+`\n\tTom blew cigarette smoke into Jon’s face and we ran away, `,
+
+`[giggling.]`
+
+];
+
+let segment = 0;
+let i = 0;
+
+function startTyping(){
+typeSegment();
+}
+
+function typeSegment(){
+
+if(segment >= segments.length){
+
+document.body.classList.add("fade-out");
+
+setTimeout(function(){
+window.location.href = "tag-menu-after-bench-foodworks.html";
+},1500);
+
+return;
+}
+
+let current = segments[segment];
+
+if(current.startsWith("[") && current.endsWith("]")){
+
+let raw = current.slice(1,-1);
+let parts = raw.split("|");
+
+let word = parts[0];
+let sound = parts[1];
+
+box.innerHTML +=
+'<span class="trigger" data-sound="' +
+(sound || "") +
+'">' +
+word +
+'</span>&nbsp;';
+
+box.scrollTop = box.scrollHeight;
+
+document
+.querySelectorAll(".trigger")
+.forEach(t=>{
+t.onclick = continueTyping;
+});
+
+return;
+}
+
+function typeLetter(){
+
+if(i >= current.length){
+
+i = 0;
+segment++;
+
+typeSegment();
+return;
+}
+
+playTypeSound();
+
+box.innerHTML +=
+current.charAt(i) +
+'<span class="cursor">|</span>';
+
+box.innerHTML =
+box.innerHTML.replace(
+/<span class="cursor">\|<\/span>(?!.*cursor)/g,
+''
+);
+
+box.scrollTop = box.scrollHeight;
+
+let speed = 22 + Math.random()*14;
+
+if(current[i] === "."){
+speed = 140;
+}
+
+if(current[i] === ","){
+speed = 80;
+}
+
+if(current[i] === "—"){
+speed = 110;
+}
+
+if(current[i] === "\n"){
+speed = 180;
+}
+
+i++;
+
+setTimeout(typeLetter,speed);
+
+}
+
+typeLetter();
+
+}
+
+function continueTyping(event){
+
+let clicked = event.target;
+
+if(clicked.dataset.sound){
+playSpecialSound(clicked.dataset.sound);
+}
+
+clicked.onclick = null;
+
+segment++;
+
+typeSegment();
+
+}
+
+</script>
+
+</body>
+</html>
