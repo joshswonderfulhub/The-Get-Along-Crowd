@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Intro Quote</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:black;
+color:white;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+font-family:"Changa One", sans-serif;
+}
+
+.quote-container{
+width:75vw;
+max-width:1000px;
+text-align:center;
+opacity:0;
+animation:fadeIn 3s ease forwards;
+}
+
+.quote{
+font-size:2rem;
+line-height:1.8;
+}
+
+.credit{
+margin-top:35px;
+font-size:1.2rem;
+opacity:0.8;
+}
+
+.click-word{
+color:pink;
+cursor:pointer;
+transition:.2s ease;
+}
+
+.click-word:hover{
+opacity:.7;
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+.fade-out{
+opacity:0 !important;
+transition:opacity 2s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="quote-container" id="quoteContainer">
+
+<div class="quote">
+“I had a dream. In fact, it was the night I met you. In the dream, there was our world, and the world was dark because there weren't any robins and the robins represented love. And for the longest time, there was just this darkness. And all of a sudden, thousands of robins were set free, and they flew down and brought this blinding light of love. And it seemed like that love would be the only thing that would make any difference. And it did. So, I guess it means there is trouble 'til the robins <span class="click-word" onclick="goNext()">come.</span>”
+</div>
+
+<div class="credit">
+— Sandy Williams, <i>Blue Velvet</i> (1986)
+</div>
+
+</div>
+
+<audio id="music" src="audio/quote-theme.mp3" loop></audio>
+
+<script>
+const quoteContainer =
+document.getElementById("quoteContainer");
+
+const music =
+document.getElementById("music");
+
+window.onload = function(){
+
+music.volume = 0.6;
+
+music.play().catch(()=>{
+document.addEventListener("click",()=>{
+music.play();
+},{once:true});
+});
+
+};
+
+function goNext(){
+
+quoteContainer.classList.add("fade-out");
+
+setTimeout(function(){
+
+window.location.href =
+"intro.html";
+
+},2000);
+
+}
+</script>
+
+</body>
+</html>

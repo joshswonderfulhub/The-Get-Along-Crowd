@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Funny Story</title>
 
-  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
@@ -45,6 +44,14 @@
       animation: float 3s ease-in-out infinite reverse;
     }
 
+    .byline {
+      margin-top: 18px;
+      color: white;
+      font-size: 1.3rem;
+      letter-spacing: 3px;
+      opacity: 0.9;
+    }
+
     @keyframes float {
       0% { transform: translateY(0px); }
       50% { transform: translateY(-12px); }
@@ -69,35 +76,39 @@
   <div class="container" id="container">
     <h1 class="funny">FUNNY</h1>
     <h1 class="story">STORY</h1>
+
+    <div class="byline">by Josh Sitch</div>
+
     <div class="hint">press enter</div>
   </div>
 
-  <!-- audio (FIXED PATH) -->
   <audio id="transitionSound" src="audio/rose-anthem-one.mp3"></audio>
 
   <script>
     const container = document.getElementById("container");
     const sound = document.getElementById("transitionSound");
 
-    let triggered = false; // prevents double triggering
+    let triggered = false;
 
     function enterSite() {
-  sessionStorage.clear();
 
-  container.classList.add("fade-out");
+      if(triggered) return;
+      triggered = true;
 
-  sound.currentTime = 0;
-  sound.play();
+      sessionStorage.clear();
 
-  setTimeout(() => {
-    window.location.href = "intro.html";
-  }, 1000);
-}
+      container.classList.add("fade-out");
 
-    // click
+      sound.currentTime = 0;
+      sound.play();
+
+      setTimeout(() => {
+        window.location.href = "intro2.html";
+      }, 1000);
+    }
+
     container.addEventListener("click", enterSite);
 
-    // enter key
     document.addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
         enterSite();
